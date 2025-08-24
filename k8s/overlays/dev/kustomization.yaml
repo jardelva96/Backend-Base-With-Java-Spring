@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: retail
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/YOUR_ORG/config-server
+    newName: config-server
+    newTag: dev
+  - name: ghcr.io/YOUR_ORG/api-gateway
+    newName: api-gateway
+    newTag: dev
+  - name: ghcr.io/YOUR_ORG/catalog-service
+    newName: catalog-service
+    newTag: dev
+  - name: ghcr.io/YOUR_ORG/orders-service
+    newName: orders-service
+    newTag: dev
+  - name: ghcr.io/YOUR_ORG/inventory-service
+    newName: inventory-service
+    newTag: dev

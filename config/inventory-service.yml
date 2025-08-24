@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: inventory-service
+  datasource:
+    url: jdbc:postgresql://inventory-db:5432/inventorydb
+    username: inventory
+    password: inventory
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8083
+management.endpoints.web.exposure.include: health,info,prometheus

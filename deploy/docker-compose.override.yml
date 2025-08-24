@@ -1,0 +1,13 @@
+services:
+  api-gateway:
+    environment:
+      - SPRING_APPLICATION_NAME=api-gateway
+  catalog-service:
+    environment:
+      - SPRING_APPLICATION_NAME=catalog-service
+  orders-service:
+    environment:
+      - SPRING_APPLICATION_NAME=orders-service
+  inventory-service:
+    environment:
+      - SPRING_APPLICATION_NAME=inventory-service

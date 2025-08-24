@@ -1,0 +1,13 @@
+spring:
+  application.name: orders-service
+  datasource:
+    url: jdbc:postgresql://orders-db:5432/ordersdb
+    username: orders
+    password: orders
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate.ddl-auto: update
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server.port: 8082
+management.endpoints.web.exposure.include: health,info,prometheus

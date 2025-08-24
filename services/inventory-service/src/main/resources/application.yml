@@ -1,0 +1,23 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: inventory-service
+  config:
+    import: "optional:configserver:http://config-server:8888"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      probes:
+        enabled: true   # habilita /actuator/health/liveness e /readiness
+  tracing:
+    enabled: true
+  otlp:
+    tracing:
+      endpoint: http://otel-collector:4317

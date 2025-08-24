@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: catalog
+          uri: http://catalog-service:8081
+          predicates: [ Path=/catalog/** ]
+          filters: [ StripPrefix=1 ]
+        - id: orders
+          uri: http://orders-service:8082
+          predicates: [ Path=/orders/** ]
+          filters: [ StripPrefix=1 ]
+        - id: inventory
+          uri: http://inventory-service:8083
+          predicates: [ Path=/inventory/** ]
+          filters: [ StripPrefix=1 ]
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,gateway

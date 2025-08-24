@@ -1,0 +1,21 @@
+# Java / Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/
+*.log
+*.iml
+.idea/
+.project
+.classpath
+.settings/
+bin/
+out/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Docker
+**/.env
+**/tmp/

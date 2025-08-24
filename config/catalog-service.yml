@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: catalog-service
+  datasource:
+    url: jdbc:postgresql://catalog-db:5432/catalogdb
+    username: catalog
+    password: catalog
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8081
+management.endpoints.web.exposure.include: health,info,prometheus
