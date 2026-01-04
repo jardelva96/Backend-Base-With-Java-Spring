@@ -1,84 +1,84 @@
-# Backend Base com Spring Boot (branch `dev`)
+# Backend Base with Spring Boot (branch `dev`)
 
-Projeto inicial pronto para clonar e rodar: microservices com Spring Boot 3 / Java 21, banco PostgreSQL, mensageria Kafka e stack de observabilidade (Prometheus, Grafana, Jaeger e OTel), tudo orquestrado por Docker Compose. Ideal para quem quer começar um backend sem ter que instalar nada localmente além do Docker.
-
----
-
-## 🧰 O que vem pronto
-
-- **Infra**: Zookeeper + Kafka, três bancos PostgreSQL (catálogo, pedidos, estoque).
-- **Serviços**: Config Server (modo `native`), API Gateway, Catalog / Orders / Inventory.
-- **Observabilidade**: Prometheus, Grafana, Jaeger e OpenTelemetry Collector.
-- **Deploy rápido**: Compose em `deploy/` com build das imagens e bind dos YAMLs do Config Server.
+Starter-friendly microservices stack that you can clone and run right away: Spring Boot 3 / Java 21 services, PostgreSQL databases, Kafka, and a full observability stack (Prometheus, Grafana, Jaeger, OTel), all orchestrated via Docker Compose. Perfect for bootstrapping a backend without installing anything beyond Docker.
 
 ---
 
-## 🗂 Estrutura de pastas
+## 🧰 What's included
+
+- **Infrastructure**: Zookeeper + Kafka, three PostgreSQL databases (catalog, orders, inventory).
+- **Services**: Config Server (native mode), API Gateway, Catalog / Orders / Inventory.
+- **Observability**: Prometheus, Grafana, Jaeger, and OpenTelemetry Collector.
+- **Fast start**: Compose in `deploy/` builds the images and mounts the Config Server YAMLs.
+
+---
+
+## 🗂 Repository layout
 
 ```
-deploy/                 # docker-compose e .env para configuração de volumes
-config/                 # YAMLs consumidos pelo Config Server (catálogo, pedidos, gateway...)
-services/               # código dos serviços Spring Boot (cada um com seu Dockerfile)
-prometheus/             # scrape config
-grafana/                # datasource provisionado
-otel/                   # configuração do collector
+deploy/                 # docker-compose and .env for volume configuration
+config/                 # YAMLs consumed by the Config Server (gateway, catalog, orders, inventory)
+services/               # Spring Boot services (each with its own Dockerfile)
+prometheus/             # scrape configuration
+grafana/                # provisioned datasource
+otel/                   # collector configuration
 README.md
 ```
 
 ---
 
-## ✅ Pré-requisitos
+## ✅ Prerequisites
 
-- Docker + Docker Compose.
-- (Opcional) Java 21 e Maven apenas se quiser compilar fora do Docker.
+- Docker + Docker Compose
+- (Optional) Java 21 and Maven if you want to build outside Docker
 
 ---
 
-## 🚀 Comece em minutos
+## 🚀 Get running in minutes
 
-1) **Clone** e troque para a branch `dev`:
+1) **Clone** and switch to the `dev` branch:
 
 ```bash
-git clone <url-do-repo>
+git clone <repository-url>
 cd Backend-Base-With-Java-Spring
 git checkout dev
 ```
 
-2) **Configure o volume do Config Server** copiando o exemplo de `.env` (fica em `deploy/`):
+2) **Configure the Config Server volume** by copying the `.env` example (lives in `deploy/`):
 
 ```bash
 cp deploy/.env.example deploy/.env
 ```
 
-- `CONFIG_DIR` aponta para a pasta `config/`. Em Windows use um caminho **absoluto** (ex.: `C:/Users/.../config`) para evitar problemas de bind de volume.
+- `CONFIG_DIR` should point to the `config/` folder. On Windows, prefer an **absolute path** (e.g., `C:/Users/.../config`) to avoid volume binding issues.
 
-3) **Suba tudo** (build das imagens + serviços):
+3) **Start everything** (build images + run services):
 
 ```bash
 docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d --build
 ```
 
-4) **Veja os logs** (todos ou apenas de um serviço):
+4) **View logs** (all services or just one):
 
 ```bash
 docker compose -f deploy/docker-compose.yml logs -f
 docker compose -f deploy/docker-compose.yml logs -f api-gateway
 ```
 
-5) **Derrube e limpe** quando terminar:
+5) **Tear down** when you're done:
 
 ```bash
-docker compose -f deploy/docker-compose.yml down           # mantém volumes
-docker compose -f deploy/docker-compose.yml down -v        # remove tudo (inclui dados dos DBs)
+docker compose -f deploy/docker-compose.yml down           # keep volumes
+docker compose -f deploy/docker-compose.yml down -v        # remove everything (including DB data)
 ```
 
 ---
 
-## 🌐 Portas principais
+## 🌐 Key ports
 
 - API Gateway: http://localhost:8080  
 - Config Server: http://localhost:8888  
-- Kafka: 9092 (interno)  
+- Kafka: 9092 (internal)  
 - Postgres: 5433 (catalog), 5434 (orders), 5435 (inventory)  
 - Prometheus: http://localhost:9090  
 - Grafana: http://localhost:3000 (admin/admin)  
@@ -86,27 +86,27 @@ docker compose -f deploy/docker-compose.yml down -v        # remove tudo (inclui
 
 ---
 
-## 🔧 Configuração externa (Config Server)
+## 🔧 External configuration (Config Server)
 
-- Os YAMLs de cada serviço ficam em `./config`.
-- O compose monta essa pasta em `/config` dentro do container `config-server`.
-- O caminho do host vem de `CONFIG_DIR` definido em `deploy/.env` (pode ser relativo ou absoluto).
+- Service YAMLs live in `./config`.
+- Compose mounts this folder into `/config` inside the `config-server` container.
+- The host path comes from `CONFIG_DIR` defined in `deploy/.env` (relative or absolute).
 
 ---
 
-## 🧪 Verificações rápidas
+## 🧪 Quick checks
 
-Use `curl` (Linux/macOS) ou `Invoke-WebRequest` (PowerShell) após subir os containers:
+Use `curl` (Linux/macOS) or `Invoke-WebRequest` (PowerShell) after the containers are up:
 
 ```bash
-# Health do Config Server
+# Config Server health
 curl -fsS http://localhost:8888/actuator/health
 
-# YAMLs servidos pelo Config Server
+# Config Server YAMLs
 curl -fsS http://localhost:8888/api-gateway/default
 curl -fsS http://localhost:8888/catalog-service/default
 
-# Health do gateway e dos serviços via gateway
+# Gateway and downstream health (via gateway)
 curl -fsS http://localhost:8080/actuator/health
 curl -fsS http://localhost:8080/catalog/actuator/health
 curl -fsS http://localhost:8080/orders/actuator/health
@@ -115,17 +115,17 @@ curl -fsS http://localhost:8080/inventory/actuator/health
 
 ---
 
-## 🔁 Ciclo de desenvolvimento
+## 🔁 Development workflow
 
-- Altere o código de um serviço em `services/<nome-do-servico>/`.
-- Reconstrua só ele quando precisar:
+- Change the code of a service in `services/<service-name>/`.
+- Rebuild just that service when needed:
 
 ```bash
 docker compose -f deploy/docker-compose.yml build catalog-service
 docker compose -f deploy/docker-compose.yml up -d catalog-service
 ```
 
-- Logs individuais ajudam a depurar durante o desenvolvimento:
+- Tail logs for a single service while developing:
 
 ```bash
 docker compose -f deploy/docker-compose.yml logs -f orders-service
@@ -133,17 +133,17 @@ docker compose -f deploy/docker-compose.yml logs -f orders-service
 
 ---
 
-## 🧯 Dicas e problemas comuns
+## 🧯 Tips & common issues
 
-1) **Config Server não enxerga os YAMLs**: confirme se `CONFIG_DIR` no `deploy/.env` aponta para a pasta `config/`. Em Windows use caminho absoluto.
-2) **Portas ocupadas**: pare o processo que está na porta (ex.: `netstat -ano | findstr :8888` no Windows) ou troque a porta no compose.
-3) **Reset de bancos**: `docker compose -f deploy/docker-compose.yml down -v` para remover volumes.
+1) **Config Server can't see YAMLs**: make sure `CONFIG_DIR` in `deploy/.env` points to `config/`. On Windows, use an absolute path.
+2) **Port already in use**: stop the process on that port (e.g., `netstat -ano | findstr :8888` on Windows) or change the port in the compose file.
+3) **Reset databases**: run `docker compose -f deploy/docker-compose.yml down -v` to remove volumes.
 
 ---
 
-## 🧭 Próximos passos (ideias)
+## 🧭 Next ideas
 
-- Seeds/Flyway para popular dados de exemplo.
-- Testcontainers para testes de integração.
-- Dashboards prontos no Grafana.
-- Instrumentação automática com o Java Agent do OTel.
+- Seed data / Flyway migrations for sample data.
+- Testcontainers for local integration tests.
+- Ready-to-use Grafana dashboards.
+- Automatic instrumentation with the OTel Java Agent.
