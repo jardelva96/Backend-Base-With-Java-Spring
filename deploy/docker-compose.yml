@@ -83,7 +83,7 @@ services:
       - SPRING_PROFILES_ACTIVE=native
       - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:/config
     volumes:
-      - "C:/Users/Jardel/Desktop/PROJETOS/SPRING microservices/config:/config:ro"
+      - "${CONFIG_DIR:-../config}:/config:ro"
     ports: [ "8888:8888" ]
     networks: [ retail-net ]
 
