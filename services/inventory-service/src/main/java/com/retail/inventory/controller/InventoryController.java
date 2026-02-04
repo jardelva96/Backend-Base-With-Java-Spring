@@ -73,16 +73,18 @@ public class InventoryController {
     }
 
     @PostMapping("/product/{productId}/reserve")
-    public ResponseEntity<InventoryItem> reserveInventory(@PathVariable Long productId, @RequestBody Map<String, Integer> body) {
+    public ResponseEntity<?> reserveInventory(@PathVariable Long productId, @RequestBody Map<String, Integer> body) {
         try {
             Integer quantity = body.get("quantity");
             if (quantity == null) {
-                return ResponseEntity.badRequest().build();
+                return ResponseEntity.badRequest().body("Quantity is required");
             }
             InventoryItem updatedItem = inventoryService.reserveInventory(productId, quantity);
             return ResponseEntity.ok(updatedItem);
+        } catch (com.retail.inventory.exception.InsufficientInventoryException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

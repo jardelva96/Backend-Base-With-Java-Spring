@@ -68,7 +68,8 @@ public class InventoryService {
                 .orElseThrow(() -> new RuntimeException("Inventory item not found for product: " + productId));
 
         if (item.getQuantity() < quantity) {
-            throw new RuntimeException("Insufficient inventory for product: " + productId);
+            throw new com.retail.inventory.exception.InsufficientInventoryException(
+                    "Insufficient inventory for product: " + productId + ". Available: " + item.getQuantity() + ", Requested: " + quantity);
         }
 
         item.setQuantity(item.getQuantity() - quantity);

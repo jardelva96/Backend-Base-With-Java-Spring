@@ -1,5 +1,6 @@
 package com.retail.orders.controller;
 
+import com.retail.orders.dto.OrderStatusUpdateRequest;
 import com.retail.orders.entity.Order;
 import com.retail.orders.service.OrderService;
 import jakarta.validation.Valid;
@@ -47,9 +48,9 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestBody Order.OrderStatus status) {
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestBody OrderStatusUpdateRequest request) {
         try {
-            Order updatedOrder = orderService.updateOrderStatus(id, status);
+            Order updatedOrder = orderService.updateOrderStatus(id, request.getStatus());
             return ResponseEntity.ok(updatedOrder);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
